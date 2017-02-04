@@ -279,7 +279,7 @@ var/global/list/multiverse = list()
 		user << "<span class='warning'><B>[src] is recharging! Keep in mind it shares a cooldown with the swords wielded by your copies.</span>"
 
 
-/obj/item/weapon/multisword/proc/spawn_copy(var/client/C, var/turf/T)
+/obj/item/weapon/multisword/proc/spawn_copy(var/client/C, var/turf/T, mob/user)
 	var/mob/living/carbon/human/M = new/mob/living/carbon/human(T)
 	C.prefs.copy_to(M, icon_updates=0)
 	M.key = C.key
@@ -287,6 +287,7 @@ var/global/list/multiverse = list()
 	M << "<B>You are an alternate version of [usr.real_name] from another universe! Help them accomplish their goals at all costs.</B>"
 	M.real_name = usr.real_name
 	M.name = usr.real_name
+	M.voiceprint = user.voiceprint
 	M.faction = list("[usr.real_name]")
 	if(prob(50))
 		var/list/all_species = list()

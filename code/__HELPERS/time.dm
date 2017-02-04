@@ -1,12 +1,12 @@
 //Returns the world time in english
 /proc/worldtime2text()
-	return gameTimestamp("hh:mm")
+	return gameTimestamp(world.time, "hh:mm")
 
 /proc/time_stamp(format = "hh:mm:ss")
 	return time2text(world.timeofday, format)
 
-/proc/gameTimestamp(format = "hh:mm:ss") // Get the game time in text
-	return time2text(world.time - timezoneOffset + 432000, format)
+/proc/gameTimestamp(timestamp = world.time, format = "hh:mm:ss") // Get the game time in text
+	return time2text(timestamp - timezoneOffset + 432000, format)
 
 /* Returns 1 if it is the selected month and day */
 /proc/isDay(month, day)

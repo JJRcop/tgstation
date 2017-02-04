@@ -224,6 +224,7 @@
 					var/mob/living/carbon/human/chosen = pick(validchoices)
 					var/datum/dna/toDoppel = chosen.dna
 					T.real_name = toDoppel.real_name
+					T.voiceprint = toDoppel.voiceprint
 					toDoppel.transfer_identity(T, transfer_SE=1)
 					T.updateappearance(mutcolor_update=1)
 					T.domutcheck()
@@ -254,6 +255,7 @@
 							var/datum/dna/toDoppel = chosen.dna
 
 							T.real_name = toDoppel.real_name
+							T.voiceprint = toDoppel.voiceprint
 							toDoppel.transfer_identity(T, transfer_SE=1)
 							T.updateappearance(mutcolor_update=1)
 							T.domutcheck()
@@ -548,7 +550,7 @@
 	saveVoice()
 	..()
 
-/mob/living/carbon/human/interactive/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, list/spans)
+/mob/living/carbon/human/interactive/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, list/spans, voice_print, message_mode)
 	if(speaker != src)
 		knownStrings |= html_decode(raw_message)
 	..()

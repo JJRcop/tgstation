@@ -21,6 +21,7 @@
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS
 	flags_inv = HIDEJUMPSUIT
 	allowed = list(/obj/item/weapon/disk, /obj/item/weapon/stamp, /obj/item/weapon/reagent_containers/food/drinks/flask, /obj/item/weapon/melee, /obj/item/weapon/storage/lockbox/medal, /obj/item/device/assembly/flash/handheld, /obj/item/weapon/storage/box/matches, /obj/item/weapon/lighter, /obj/item/clothing/mask/cigarette, /obj/item/weapon/storage/fancy/cigarettes, /obj/item/weapon/tank/internals/emergency_oxygen)
+	identity_name = "Captain"
 
 //Chaplain
 /obj/item/clothing/suit/hooded/chaplain_hoodie
@@ -32,6 +33,7 @@
 	allowed = list(/obj/item/weapon/storage/book/bible, /obj/item/weapon/nullrod, /obj/item/weapon/reagent_containers/food/drinks/bottle/holywater, /obj/item/weapon/storage/fancy/candle_box, /obj/item/candle, /obj/item/weapon/tank/internals/emergency_oxygen)
 	hooded = 1
 	hoodtype = /obj/item/clothing/head/chaplain_hood
+	identity_name = "Chaplain"
 
 /obj/item/clothing/head/chaplain_hood
 	name = "chaplain hood"
@@ -50,6 +52,7 @@
 	body_parts_covered = CHEST|GROIN|LEGS|ARMS|HANDS
 	flags_inv = HIDESHOES|HIDEJUMPSUIT
 	allowed = list(/obj/item/weapon/storage/book/bible, /obj/item/weapon/nullrod, /obj/item/weapon/reagent_containers/food/drinks/bottle/holywater, /obj/item/weapon/storage/fancy/candle_box, /obj/item/candle, /obj/item/weapon/tank/internals/emergency_oxygen)
+	identity_name = "Nun"
 
 //Chef
 /obj/item/clothing/suit/toggle/chef
@@ -62,6 +65,7 @@
 	body_parts_covered = CHEST|GROIN|ARMS
 	allowed = list(/obj/item/weapon/kitchen)
 	togglename = "sleeves"
+	identity_name = "Chef"
 
 //Cook
 /obj/item/clothing/suit/apron/chef
@@ -139,6 +143,7 @@
 	icon_state = "officerbluejacket"
 	item_state = "officerbluejacket"
 	body_parts_covered = CHEST|ARMS
+	identity_name = "Security Officer"
 
 /obj/item/clothing/suit/security/warden
 	name = "warden's jacket"
@@ -146,6 +151,7 @@
 	icon_state = "wardenbluejacket"
 	item_state = "wardenbluejacket"
 	body_parts_covered = CHEST|ARMS
+	identity_name = "Warden"
 
 /obj/item/clothing/suit/security/hos
 	name = "head of security's jacket"
@@ -153,6 +159,7 @@
 	icon_state = "hosbluejacket"
 	item_state = "hosbluejacket"
 	body_parts_covered = CHEST|ARMS
+	identity_name = "Head of Security"
 
 
 //Surgeon

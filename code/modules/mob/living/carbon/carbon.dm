@@ -759,3 +759,11 @@
 	for(var/X in internal_organs)
 		var/obj/item/organ/I = X
 		I.Insert(src)
+
+/mob/living/carbon/proc/facial_hair_covered()
+	if((head && head.flags_inv & HIDEFACIALHAIR) || (wear_mask && wear_mask.flags_inv & HIDEFACIALHAIR))
+		. = 1
+
+/mob/living/carbon/proc/hair_covered()
+	if((head && head.flags_inv & HIDEHAIR) || (wear_mask && wear_mask.flags_inv & HIDEHAIR))
+		. = 1

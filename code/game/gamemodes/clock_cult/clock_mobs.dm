@@ -396,7 +396,7 @@
 
 //COMMUNICATION and EMERGENCE
 
-/mob/living/simple_animal/hostile/clockwork/marauder/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, list/spans)
+/mob/living/simple_animal/hostile/clockwork/marauder/Hear(message, atom/movable/speaker, message_langs, raw_message, radio_freq, list/spans, voice_print, message_mode)
 	..()
 	if(findtext(message, true_name) && is_in_host()) //Called or revealed by hearing their true name
 		if(speaker == host)
@@ -443,7 +443,7 @@
 	if(!marauder)
 		usr << "<span class='warning'>Your marauder seems to have vanished!</span>"
 		return 0
-	message = "<span class='heavy_brass'>Servant [findtextEx(name, real_name) ? "[name]" : "[real_name] (as [name])"]:</span> <span class='brass'>\"[message]\"</span>" //Processed output
+	message = "<span class='heavy_brass'>Servant [real_name]:</span> <span class='brass'>\"[message]\"</span>" //Processed output
 	src << message
 	marauder << message
 	for(var/M in mob_list)
