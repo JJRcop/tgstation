@@ -1,13 +1,17 @@
 <link rel='ractive' href='./chameleon-headset.ract'>
 
 <script>
-  component.exports = {
-    computed: {
-      readableFrequency () {
-        return Math.round(this.get('adata.frequency')) / 10
-      }
-    }
-  }
+	const HEADSET_TGUI_SYND = 2
+	component.exports = {
+		computed: {
+			readableFrequency () {
+			return Math.round(this.get('adata.frequency')) / 10
+			}
+		},
+		data: {
+			HEADSET_TGUI_SYND: HEADSET_TGUI_SYND
+		}
+	}
 </script>
 
 <ui-display title='Settings'>
@@ -17,9 +21,9 @@
         action='listen'>
         {{data.listening ? "On": "Off"}}</ui-button>
     </ui-section>
-	{{#if data.headset == 2}}
+	{{#if data.headset == HEADSET_TGUI_SYND}}
 		<ui-section label='Voice Changer'>
-			<ui-button icon='user-secret' action='voicechanger'>Open</ui-button>
+			<ui-button icon='{{data.legacyname ? data.namemasking ? "user-secret" : "user" : "user-secret"}}' style='{{data.legacyname ? data.namemasking ? "selected" : null : null}}' action='voicechanger'>{{data.legacyname ? data.namemasking ? "Enabled" : "Disabled" : "Open"}}</ui-button>
 		</ui-section>
 	{{/if}}
   {{else}}

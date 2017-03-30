@@ -41,8 +41,12 @@
 		//Stuff jammed in your limbs hurts
 		handle_embedded_objects()
 
-	//Everyone is a person, this is for the identity system.
-	name = "Person"
+	if(config.identity_memory)
+		//Everyone is a person, this is for the identity system.
+		name = "Person"
+	else
+		//Otherwise just be normal
+		name = get_visible_name()
 
 	dna.species.spec_life(src) // for mutantraces
 

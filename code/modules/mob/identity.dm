@@ -28,7 +28,7 @@ var/global/list/used_voiceprints = list()
 /atom/proc/can_see_face()
 
 /atom/proc/get_voiceprint_name(atom/speaker, voice_print)
-	. = speaker.default_identity_interact()
+	. = config.identity_memory ? speaker.default_identity_interact() : name
 
 /atom/proc/default_identity_heard()
 	. = name
@@ -40,13 +40,13 @@ var/global/list/used_voiceprints = list()
 	. = name
 
 /atom/proc/get_interact_name(atom/target)
-	. = target.default_identity_interact()
+	. = config.identity_memory ? target.default_identity_interact() : name
 
 /mob/proc/identity_subject_name(atom/A)
 	var/A_faceprint_new = A.get_faceprint()
 	if(A == src)
 		. = real_name
-	else if(!A_faceprint_new)
+	else if(!config.identity_memory || !A_faceprint_new)
 		. = A.name
 	else if(mind)
 		var/list/A_identity = mind.identity_cache[A]
@@ -106,7 +106,7 @@ var/global/list/used_voiceprints = list()
 
 /mob/living/get_voiceprint_name(atom/speaker, voice_print)
 	. = speaker.name
-	if(client && mind && voice_print)
+	if(config.identity_memory && client && mind && voice_print)
 		if(voice_print == voiceprint)
 			. = "[real_name]"
 		else
@@ -142,7 +142,7 @@ var/global/list/used_voiceprints = list()
 	. = target.name
 	if(target == src)
 		. = real_name
-	else if(mind)
+	else if(config.identity_memory && mind)
 		var/list/faceprint_entry
 		var/faceprint
 		var/interact_identity = target.default_identity_interact()
@@ -200,7 +200,7 @@ var/global/list/used_voiceprints = list()
 
 /mob/living/silicon/get_voiceprint_name(atom/speaker, voice_print)
 	. = speaker.name
-	if(client && voice_print)
+	if(config.identity_memory && client && voice_print)
 		var/datum/data/record/G = find_record("voiceprint", voice_print, data_core.general)
 		if(G)
 			var/G_name = G.fields["name"]
@@ -210,7 +210,7 @@ var/global/list/used_voiceprints = list()
 
 /mob/living/silicon/get_interact_name(atom/target)
 	. = target.name
-	if(client)
+	if(config.identity_memory && client)
 		var/datum/data/record/G
 		if(target.can_see_face())
 			var/faceprint = target.get_faceprint()
@@ -226,7 +226,7 @@ var/global/list/used_voiceprints = list()
 	var/faceprint = A.get_faceprint()
 	if(A == src)
 		. = real_name
-	else if(!faceprint)
+	else if(!config.identity_memory || !faceprint)
 		. = A.name
 	else if(mind)
 		var/list/A_identity = mind.identity_cache[A]
@@ -539,6 +539,11 @@ var/global/list/used_voiceprints = list()
 	if(!ui)
 		ui = new(user, src, ui_key, "identity_manager", "identity manager", 700, 800, master_ui, state)
 		ui.open()
+
+/datum/identity_manager/ui_status(mob/user)
+	if(config.identity_memory)
+		return ..()
+	return UI_CLOSE
 
 /datum/identity_manager/ui_data(mob/user)
 	var/list/data = list()

@@ -169,7 +169,7 @@ var/list/one_character_prefix = list(MODE_HEADSET,MODE_ROBOT,MODE_WHISPER)
 	var/deaf_type
 	var/voice
 	var/edit_print_ref
-	if(voice_print)
+	if(config.identity_memory && voice_print)
 		voice = get_voiceprint_name(speaker, voice_print)
 		if(mind && voice_print != voiceprint)
 			edit_print_ref = mind.voiceprint_edit_tag(voice_print)

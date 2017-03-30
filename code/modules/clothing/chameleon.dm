@@ -550,6 +550,7 @@
 	var/chosen_voice
 	var/chosen_voiceprint
 	var/selected_voice
+	var/name_masking = FALSE
 	var/voice_masking = FALSE
 	var/list/recorded_voiceprints = list()
 	var/list/voiceprint_refs = list()
@@ -622,13 +623,17 @@
 
 /obj/item/device/radio/headset/chameleon/ui_data(mob/user)
 	var/list/data = ..()
-	data["headset"] = 2
-	data["recording"] = recording
-	data["speeches"] = voiceprint_speeches.len ? voiceprint_speeches : null
-	data["pseudonyms"] = voiceprint_pseudonyms
-	data["voicemasking"] = voice_masking
-	data["chosenvoice"] = chosen_voice
-	data["selectedvoice"] = selected_voice
+	data["headset"] = HEADSET_TGUI_SYND
+	if(config.identity_memory)
+		data["recording"] = recording
+		data["speeches"] = voiceprint_speeches.len ? voiceprint_speeches : null
+		data["pseudonyms"] = voiceprint_pseudonyms
+		data["voicemasking"] = voice_masking
+		data["chosenvoice"] = chosen_voice
+		data["selectedvoice"] = selected_voice
+	else
+		data["legacyname"] = TRUE
+		data["namemasking"] = name_masking
 	. = data
 
 /obj/item/device/radio/headset/chameleon/proc/toggle_recording()
@@ -641,6 +646,9 @@
 			add_fake_voiceprint()
 		else
 			remove_fake_voiceprint()
+
+/obj/item/device/radio/headset/chameleon/proc/toggle_name_masking()
+	name_masking = !name_masking
 
 /obj/item/device/radio/headset/chameleon/proc/choose_voice(voiceprint_ref)
 	var/no_voice = !voiceprint_ref || voiceprint_ref == chosen_voice
@@ -668,44 +676,53 @@
 		voicechanger_ui.set_style("syndicate")
 		voicechanger_ui.open()
 
+/obj/item/device/radio/headset/chameleon/ui_status(mob/user, datum/ui_state/state, ui_key)
+	if(ui_key == "voicechanger" && !config.identity_memory)
+		return UI_CLOSE
+	return ..()
+
 /obj/item/device/radio/headset/chameleon/ui_act(action, params, datum/tgui/ui, datum/ui_state/state)
 	if(..())
 		return
-	switch(action)
-		if("voicechanger")
+	if(action == "voicechanger")
+		if(config.identity_memory)
 			open_voice_changer(ui.user, state)
-		if("togglerecord")
-			toggle_recording()
-			. = TRUE
-		if("usevoice")
-			var/choice = params["voice"]
-			if(recorded_voiceprints[choice])
-				choose_voice(choice)
+		else
+			toggle_name_masking()
+	if(config.identity_memory)
+		switch(action)
+			if("togglerecord")
+				toggle_recording()
 				. = TRUE
-		if("selectvoice")
-			var/choice = params["voice"]
-			if(selected_voice != choice)
-				selected_voice = choice
-			else
-				selected_voice = null
-			. = TRUE
-		if("deletevoice")
-			var/voice = params["voice"]
-			var/voice_print = recorded_voiceprints[voice]
-			if(voice_print)
-				voiceprint_speeches -= voice
-				voiceprint_pseudonyms -= voice
-				voiceprint_refs -= voice_print
-				recorded_voiceprints -= voice
-				if(chosen_voice == voice)
-					choose_voice(null)
+			if("usevoice")
+				var/choice = params["voice"]
+				if(recorded_voiceprints[choice])
+					choose_voice(choice)
+					. = TRUE
+			if("selectvoice")
+				var/choice = params["voice"]
+				if(selected_voice != choice)
+					selected_voice = choice
+				else
+					selected_voice = null
 				. = TRUE
-		if("togglevoicemasking")
-			toggle_voice_masking()
-			. = TRUE
-		if("clearvoices")
-			clear_voices()
-			. = TRUE
+			if("deletevoice")
+				var/voice = params["voice"]
+				var/voice_print = recorded_voiceprints[voice]
+				if(voice_print)
+					voiceprint_speeches -= voice
+					voiceprint_pseudonyms -= voice
+					voiceprint_refs -= voice_print
+					recorded_voiceprints -= voice
+					if(chosen_voice == voice)
+						choose_voice(null)
+					. = TRUE
+			if("togglevoicemasking")
+				toggle_voice_masking()
+				. = TRUE
+			if("clearvoices")
+				clear_voices()
+				. = TRUE
 
 /obj/item/device/pda/chameleon
 	name = "PDA"

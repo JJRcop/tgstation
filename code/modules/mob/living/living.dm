@@ -75,7 +75,7 @@
 
 /mob/living/Topic(href, href_list)
 	..()
-	if(href_list["voiceprint_edit"] && href_list["t"] && usr == src && mind && client)
+	if(href_list["voiceprint_edit"] && href_list["t"] && config.identity_memory && usr == src && mind && client)
 		var/edit_tag = href_list["voiceprint_edit"]
 		var/href_timestamp = text2num(href_list["t"])
 		var/tag_entry = mind.identity_edit_tags[edit_tag]

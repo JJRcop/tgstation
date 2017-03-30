@@ -27,6 +27,16 @@ OOC_DURING_ROUND
 #Comment this out if you want to disable emojis
 EMOJIS
 
+### IDENTITY ###
+
+## Causes people to not instantly know everybody's name, and will see people differently in chat depending on what is in their memory.
+## Comment out to use the mob's name directly.
+IDENTITY_MEMORY
+
+## Time window in seconds you can latejoin and get filled in with identities of the crew.
+## Comment out or give a negative number to allow identity fill in forever.
+LATEJOIN_IDENTITY_RETCON 60
+
 ### MOB MOVEMENT ###
 
 ## We suggest editing these variables ingame to find a good speed for your server.
@@ -228,10 +238,6 @@ TRAITOR_OBJECTIVES_AMOUNT 2
 
 ## If late-joining players have a chance to become a traitor/changeling
 ALLOW_LATEJOIN_ANTAGONISTS
-
-## Time window in seconds you can latejoin and get filled in with identities of the crew.
-## Comment out or give a negative number to allow identity fill in forever.
-LATEJOIN_IDENTITY_RETCON 60
 
 ## Uncomment to allow players to see the set odds of different rounds in secret/random in the get server revision screen. This will NOT tell the current roundtype.
 #SHOW_GAME_TYPE_ODDS

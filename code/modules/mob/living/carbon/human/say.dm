@@ -29,6 +29,14 @@
 	return ..() | dna.mutations_get_spans() | dna.species_get_spans()
 
 /mob/living/carbon/human/GetVoice()
+	if(istype(ears, /obj/item/device/radio/headset/chameleon))
+		var/obj/item/device/radio/headset/chameleon/V = ears
+		var/id_name = get_id_name("")
+		if(V.name_masking)
+			if(id_name)
+				return id_name
+			else
+				return real_name
 	if(mind && mind.changeling && mind.changeling.mimicing)
 		return mind.changeling.mimicing
 	if(GetSpecialVoice())
@@ -87,8 +95,9 @@
 	return 0
 
 /mob/living/carbon/human/get_alt_name()
-	if(name != GetVoice())
-		return " (as [get_id_name("Unknown")])"
+	var/id_name = get_id_name("Unknown")
+	if(id_name != GetVoice())
+		return " (as [id_name])"
 
 /mob/living/carbon/human/proc/forcesay(list/append) //this proc is at the bottom of the file because quote fuckery makes notepad++ cri
 	if(stat == CONSCIOUS)

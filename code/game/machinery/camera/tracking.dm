@@ -35,6 +35,7 @@
 	var/list/names = list()
 	var/list/namecounts = list()
 	var/list/records = list()
+	var/list/mobs = list()
 	var/list/cameras = list()
 
 /mob/living/silicon/ai/proc/trackable_mobs()
@@ -42,39 +43,46 @@
 	track.names.Cut()
 	track.namecounts.Cut()
 	track.records.Cut()
+	track.mobs.Cut()
 
 	if(stat == DEAD)
 		return list()
 
-	for(var/datum/data/record/G in data_core.general)
-		var/record_id = G.fields["id"]
-		if(!(G.fields["faceprint"] && record_id))
-			continue
-		var/name = G.fields["name"]
-		if(!name)
-			name = "&lt;NAME MISSING&gt;"
-		if (name in track.names)
-			track.namecounts[name]++
-			name = text("[] ([])", name, track.namecounts[name])
-		else
-			track.names.Add(name)
-			track.namecounts[name] = 1
-		track.records[name] = record_id
-	var/list/targets = sortList(track.records)
+	if(config.identity_memory)
+		for(var/datum/data/record/G in data_core.general)
+			var/record_id = G.fields["id"]
+			if(!(G.fields["faceprint"] && record_id))
+				continue
+			var/name = G.fields["name"]
+			if(!name)
+				name = "&lt;NAME MISSING&gt;"
+			name = avoid_assoc_duplicate_keys(name, track.names)
+			track.records[name] = record_id
+	else
+		for(var/mob/living/M in mob_list)
+			if(!M.can_track(usr))
+				continue
+			var/name = M.name
+			name = avoid_assoc_duplicate_keys(name, track.names)
+			track.mobs[name] = M
+	var/list/targets = config.identity_memory ? sortList(track.records) : sortList(track.mobs)
 
 	return targets
 
 /mob/living/silicon/ai/proc/ai_track_href(atom/A, record_id)
-	var/turf/T = get_turf(A)
-	var/coords_href
-	if(T && cameranet.checkTurfVis(T))
-		coords_href = ";X=[T.x];Y=[T.y];Z=[T.z]"
-	if(record_id)
-		. = ";track=[record_id][coords_href]"
-	else if(coords_href)
-		. = ";trackfromcoords=1[coords_href]"
+	if(config.identity_memory)
+		var/turf/T = get_turf(A)
+		var/coords_href
+		if(T && cameranet.checkTurfVis(T))
+			coords_href = ";X=[T.x];Y=[T.y];Z=[T.z]"
+		if(record_id)
+			. = ";track=[record_id][coords_href]"
+		else if(coords_href)
+			. = ";trackfromcoords=1[coords_href]"
+		else
+			. = ";notrace=1"
 	else
-		. = ";notrace=1"
+		. = ";trackname=[A.name]"
 
 /mob/living/silicon/ai/proc/mobs_from_record(datum/data/record/R)
 	if(!R)
@@ -98,14 +106,19 @@
 	if(!target_name)
 		return
 
-	var/record_id = track.records[target_name]
-	if(!record_id)
-		return
-	var/datum/data/record/G = find_record("id", record_id, data_core.general)
-	if(!G)
-		src << "<span class='notice'>Unable to locate [target_name] in crew records.</span>"
-		return
-	var/list/targets = mobs_from_record(G)
+	var/list/targets
+
+	if(config.identity_memory)
+		var/record_id = track.records[target_name]
+		if(!record_id)
+			return
+		var/datum/data/record/G = find_record("id", record_id, data_core.general)
+		if(!G)
+			src << "<span class='notice'>Unable to locate [target_name] in crew records.</span>"
+			return
+		targets = mobs_from_record(G)
+	else if(track.mobs[target_name])
+		targets = list(track.mobs[target_name])
 	if(targets && targets.len)
 		ai_actual_track(pick(targets))
 	else
@@ -159,7 +172,7 @@
 /mob/living/silicon/ai/proc/ai_coords_track(x, y, z)
 	var/turf/T = locate(x, y, z)
 	if(T && cameranet.checkTurfVis(T))
-		. = 1
+		. = TRUE
 		cameraFollow = null
 		src.eyeobj.setLoc(T)
 		var/list/targets = list()
@@ -167,7 +180,7 @@
 			targets += L
 		if(targets && targets.len)
 			ai_actual_track(pick(targets))
-			. = 2
+			. = AI_TRACK_MOB_FOUND
 
 /proc/near_camera(mob/living/M)
 	if (!isturf(M.loc))

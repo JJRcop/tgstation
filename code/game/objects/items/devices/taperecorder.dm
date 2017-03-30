@@ -228,7 +228,7 @@
 		AM.Hear(rendered, src, virt.languages_spoken, raw_message, , my_spans)
 
 /obj/item/device/taperecorder/proc/compose_recorded_message(atom/movable/virtualspeaker/virt, timestamp, raw_message, list/my_spans, list/their_spans, atom/movable/hearer=src, voiceprint_name, accent)
-	. = "[timestamp] [hearer.compose_message(virt, virt.languages_spoken, raw_message, , their_spans, voiceprint_name, accent)]"
+	. = "[timestamp] [hearer.compose_message(virt, virt.languages_spoken, raw_message, , their_spans, config.identity_memory ? voiceprint_name : null, accent)]"
 
 /obj/item/device/taperecorder/proc/compose_said_message(atom/movable/virtualspeaker/virt, timestamp, raw_message, list/my_spans, list/their_spans, atom/movable/hearer=src, voiceprint_name, accent)
 	var/message = compose_recorded_message(virt, timestamp, raw_message, my_spans, their_spans, hearer, voiceprint_name, accent)

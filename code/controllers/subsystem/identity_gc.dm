@@ -22,6 +22,8 @@ var/datum/controller/subsystem/identity_gc/SSidentity_gc
 
 /datum/controller/subsystem/identity_gc/fire()
 	if(!dirty_minds.len && ticker.minds.len)
+		if(!config.identity_memory)
+			return
 		dirty_minds = ticker.minds.Copy()
 	var/iterate = TRUE
 	var/available_iterations = IDENTITY_GC_MAX_ITERATIONS

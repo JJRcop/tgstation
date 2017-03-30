@@ -108,3 +108,6 @@
 #define INDIVIDUAL_EMOTE_LOG "Emote log"
 #define INDIVIDUAL_OOC_LOG "OOC log"
 #define INDIVIDUAL_SHOW_ALL_LOG "All logs"
+
+//AI tracking
+#define AI_TRACK_MOB_FOUND 2

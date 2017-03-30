@@ -727,7 +727,7 @@ var/list/non_fakeattack_weapons = list(/obj/item/weapon/gun/ballistic, /obj/item
 		var/voice_print = person.get_voiceprint()
 		var/voiceprint_name = target.get_voiceprint_name(person, voice_print)
 		var/accent = person.accent_from_voiceprint(voice_print)
-		to_chat(target, target.compose_message(person, person.languages_understood, pick(speak_messages), null, person.get_spans(), voiceprint_name, accent))
+		to_chat(target, target.compose_message(person, person.languages_understood, pick(speak_messages), null, person.get_spans(), config.identity_memory ? voiceprint_name : null, accent))
 		if(target.client)
 			target.client.images |= speech_overlay
 			sleep(30)
@@ -740,7 +740,7 @@ var/list/non_fakeattack_weapons = list(/obj/item/weapon/gun/ballistic, /obj/item
 		var/voice_print = person.get_voiceprint()
 		var/voiceprint_name = target.get_voiceprint_name(person, voice_print)
 		var/accent = person.accent_from_voiceprint(voice_print)
-		to_chat(target, target.compose_message(person, person.languages_understood, pick(radio_messages), "1459", person.get_spans(), voiceprint_name, accent))
+		to_chat(target, target.compose_message(person, person.languages_understood, pick(radio_messages), "1459", person.get_spans(), config.identity_memory ? voiceprint_name : null, accent))
 	qdel(src)
 
 /obj/effect/hallucination/message

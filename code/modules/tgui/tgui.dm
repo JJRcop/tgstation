@@ -346,7 +346,7 @@
   * optional push bool Push an update to the UI (an update is always sent for UI_DISABLED).
  **/
 /datum/tgui/proc/update_status(push = 0)
-	var/status = src_object.ui_status(user, state)
+	var/status = src_object.ui_status(user, state, ui_key)
 	if(master_ui)
 		status = min(status, master_ui.status)
 

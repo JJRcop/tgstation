@@ -53,6 +53,7 @@
 	if(ishuman(loc))
 		var/mob/living/carbon/human/M = loc
 		new /obj/effect/overlay/temp/dir_setting/ninja/cloak(get_turf(M), M.dir)
+		M.name_override = disguise.name
 		M.icon = disguise.icon
 		M.icon_state = disguise.icon_state
 		M.cut_overlays()
@@ -66,6 +67,7 @@
 	if(ishuman(loc))
 		var/mob/living/carbon/human/M = loc
 		new /obj/effect/overlay/temp/dir_setting/ninja(get_turf(M), M.dir)
+		M.name_override = null
 		M.cut_overlays()
 		M.regenerate_icons()
 

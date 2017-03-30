@@ -381,7 +381,7 @@ var/list/ai_list = list()
 				H.attack_ai(src) //may as well recycle
 			else
 				to_chat(src, "<span class='notice'>Unable to locate the holopad.</span>")
-	if(href_list["track"])
+	if(href_list["track"] && config.identity_memory)
 		var/record_id = href_list["track"]
 		var/datum/data/record/G
 		if(record_id)
@@ -398,16 +398,27 @@ var/list/ai_list = list()
 			var/y = text2num(href_list["Y"])
 			var/z = text2num(href_list["Z"])
 			if(src.eyeobj && x && y && z)
-				var/coordstracking = ai_coords_track(x, y, z) >= 2
+				var/coordstracking = ai_coords_track(x, y, z) >= AI_TRACK_MOB_FOUND
 				if(!coordstracking && G)
 					to_chat(src, "<span class='notice'>Facial recognition failed for target.</span>")
+	if(href_list["trackname"] && !config.identity_memory)
+		var/track_name = href_list["trackname"]
+		trackable_mobs()
+		var/list/targets = list()
+		var/list/mob_tracks = track.mobs
+		for(var/M_name in mob_tracks)
+			var/mob/M = mob_tracks[M_name]
+			if(M.name == track_name)
+				targets += M
+		if(targets.len)
+			ai_actual_track(pick(targets))
 	if(href_list["trackfromcoords"])
 		var/x = text2num(href_list["X"])
 		var/y = text2num(href_list["Y"])
 		var/z = text2num(href_list["Z"])
 		if(src.eyeobj && x && y && z)
 			if(!ai_coords_track(x, y, z))
-				src << "<span class='notice'>Specified coordinates are not visible on camera.</span>"
+				to_chat(src, "<span class='notice'>Specified coordinates are not visible on camera.</span>")
 	if(href_list["notrace"])
 		src << "<span class='notice'>Unable to acquire trace.</span>"
 	if(href_list["callbot"]) //Command a bot to move to a selected location.
