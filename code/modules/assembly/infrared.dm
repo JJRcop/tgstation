@@ -78,8 +78,7 @@
 
 /obj/item/device/assembly/infra/attack_hand()
 	qdel(first)
-	..()
-	return
+	return ..()
 
 /obj/item/device/assembly/infra/Move()
 	var/t = dir
@@ -100,7 +99,8 @@
 	audible_message("[icon2html(src, hearers(src))] *beep* *beep*", null, 3)
 	next_activate =  world.time + 30
 
-/obj/item/device/assembly/infra/interact(mob/user)//TODO: change this this to the wire control panel
+/obj/item/device/assembly/infra/ui_interact(mob/user)//TODO: change this this to the wire control panel
+	. = ..()
 	if(is_secured(user))
 		user.set_machine(src)
 		var/dat = "<TT><B>Infrared Laser</B>\n<B>Status</B>: [on ? "<A href='?src=[REF(src)];state=0'>On</A>" : "<A href='?src=[REF(src)];state=1'>Off</A>"]<BR>\n<B>Visibility</B>: [visible ? "<A href='?src=[REF(src)];visible=0'>Visible</A>" : "<A href='?src=[REF(src)];visible=1'>Invisible</A>"]<BR>\n</TT>"

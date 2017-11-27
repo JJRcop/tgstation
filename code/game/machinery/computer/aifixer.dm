@@ -18,12 +18,8 @@
 	else
 		return ..()
 
-/obj/machinery/computer/aifixer/attack_hand(mob/user)
-	if(..())
-		return
-	interact(user)
-
-/obj/machinery/computer/aifixer/interact(mob/user)
+/obj/machinery/computer/aifixer/ui_interact(mob/user)
+	. = ..()
 
 	var/dat = ""
 

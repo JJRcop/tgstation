@@ -69,6 +69,9 @@
 	return ..()
 
 /obj/machinery/quantumpad/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(panel_open)
 		to_chat(user, "<span class='warning'>The panel must be closed before operating this machine!</span>")
 		return

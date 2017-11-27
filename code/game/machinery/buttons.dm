@@ -15,7 +15,7 @@
 	use_power = IDLE_POWER_USE
 	idle_power_usage = 2
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
-
+	interact_open_silicon = FALSE
 
 /obj/machinery/button/New(loc, ndir = 0, built = 0)
 	..()
@@ -98,7 +98,7 @@
 		return
 
 	if(user.a_intent != INTENT_HARM && !(W.flags_1 & NOBLUDGEON_1))
-		return src.attack_hand(user)
+		return attack_hand(user)
 	else
 		return ..()
 
@@ -121,9 +121,12 @@
 	initialized_button = 1
 
 /obj/machinery/button/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(!initialized_button)
 		setup_device()
-	src.add_fingerprint(user)
+	add_fingerprint(user)
 	if(panel_open)
 		if(device || board)
 			if(device)

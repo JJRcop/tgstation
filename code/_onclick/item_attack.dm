@@ -30,6 +30,8 @@
 	interact(user)
 
 /obj/item/proc/pre_attackby(atom/A, mob/living/user, params) //do stuff before attackby!
+	if(SendSignal(COMSIG_ITEM_PRE_ATTACK, A, user, params) & COMPONENT_NO_ATTACK)
+		return FALSE
 	return TRUE //return FALSE to avoid calling attackby after this proc does stuff
 
 // No comment
@@ -80,7 +82,8 @@
 
 //the equivalent of the standard version of attack() but for object targets.
 /obj/item/proc/attack_obj(obj/O, mob/living/user)
-	SendSignal(COMSIG_ITEM_ATTACK_OBJ, O, user)
+	if(SendSignal(COMSIG_ITEM_ATTACK_OBJ, O, user) & COMPONENT_NO_ATTACK_OBJ)
+		return
 	if(flags_1 & NOBLUDGEON_1)
 		return
 	user.changeNext_move(CLICK_CD_MELEE)

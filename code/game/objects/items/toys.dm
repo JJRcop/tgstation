@@ -420,10 +420,11 @@
 		. = ..()
 
 /obj/item/toy/prize/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(loc == user)
 		attack_self(user)
-	else
-		. = ..()
 
 /obj/item/toy/prize/ripley
 	name = "toy Ripley"
@@ -502,7 +503,7 @@
 
 // Talking toys are language universal, and thus all species can use them
 /obj/item/toy/talking/attack_alien(mob/user)
-	. = attack_hand(user)
+	return attack_hand(user)
 
 /obj/item/toy/talking/attack_self(mob/user)
 	if(!cooldown)
@@ -648,6 +649,9 @@
 
 
 /obj/item/toy/cards/deck/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(user.lying)
 		return
 	var/choice = null
@@ -714,6 +718,7 @@
 		return ..()
 
 /obj/item/toy/cards/deck/MouseDrop(atom/over_object)
+	. = ..()
 	var/mob/living/M = usr
 	if(!istype(M) || usr.incapacitated() || usr.lying)
 		return
@@ -747,6 +752,10 @@
 	interact(user)
 
 /obj/item/toy/cards/cardhand/interact(mob/user)
+	interact(user)
+
+/obj/item/toy/cards/cardhand/ui_interact(mob/user)
+	. = ..()
 	var/dat = "You have:<BR>"
 	for(var/t in currenthand)
 		dat += "<A href='?src=[REF(src)];pick=[t]'>A [t].</A><BR>"

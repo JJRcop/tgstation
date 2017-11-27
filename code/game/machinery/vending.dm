@@ -207,7 +207,7 @@
 			if(iscompartmentfull(user))
 				break
 			if(!S.junkiness)
-				T.remove_from_storage(S, src)
+				T.SendSignal(COMSIG_TRY_STORAGE_TAKE, S, src)
 				food_load(S)
 				loaded++
 			else
@@ -347,10 +347,10 @@
 	obj_flags |= EMAGGED
 	to_chat(user, "<span class='notice'>You short out the product lock on [src].</span>")
 
-/obj/machinery/vending/attack_ai(mob/user)
-	return attack_hand(user)
-
 /obj/machinery/vending/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	var/dat = ""
 	if(panel_open && !isAI(user))
 		return wires.interact(user)

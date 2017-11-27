@@ -107,10 +107,20 @@ Class Procs:
 	var/critical_machine = FALSE //If this machine is critical to station operation and should have the area be excempted from power failures.
 	var/list/occupant_typecache //if set, turned into typecache in Initialize, other wise, defaults to mob/living typecache
 	var/atom/movable/occupant = null
-	var/interact_open = FALSE // Can the machine be interacted with when in maint/when the panel is open.
-	var/interact_offline = 0 // Can the machine be interacted with while de-powered.
 	var/speed_process = FALSE // Process as fast as possible?
 	var/obj/item/circuitboard/circuit // Circuit to be created and inserted when the machinery is created
+
+	//Interaction
+	var/interact_attack_hand = TRUE	//automatically handle logic for whether or not interact() should be called on attack hand/ai/robot/paw.
+	var/interact_open = FALSE // Can the machine be interacted with when in maint/when the panel is open.
+	var/interact_offline = FALSE // Can the machine be interacted with while de-powered.
+	var/interact_requires_silicon = FALSE	//requires silicon for interact() autocall?
+	var/interact_requires_dexterity = FALSE	//Can monkeys/non adv tool users use?
+	var/interact_allow_silicon = TRUE
+	var/interact_open_silicon = FALSE
+	var/interact_wires_if_open = FALSE
+	var/interact_requires_anchored = FALSE
+	var/interact_ui_interact = TRUE			//Automatically call ui_interact() on interact()?
 
 /obj/machinery/Initialize()
 	if(!armor)
@@ -155,7 +165,7 @@ Class Procs:
 		new /obj/effect/temp_visual/emp(loc)
 	..()
 
-/obj/machinery/proc/open_machine(drop = 1)
+/obj/machinery/proc/open_machine(drop = TRUE)
 	state_open = TRUE
 	density = FALSE
 	if(drop)
@@ -207,22 +217,31 @@ Class Procs:
 /obj/machinery/proc/is_operational()
 	return !(stat & (NOPOWER|BROKEN|MAINT))
 
-/obj/machinery/proc/is_interactable()
+/obj/machinery/proc/is_interactable(mob/user)
 	if((stat & (NOPOWER|BROKEN)) && !interact_offline)
 		return FALSE
 	if(panel_open && !interact_open)
-		return FALSE
+		if(!issilicon(user) || !interact_open_silicon)
+			return FALSE
 	return TRUE
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+//Return a non FALSE value to interrupt attack_hand propagation to subtypes.
 /obj/machinery/interact(mob/user, special_state)
+	. = ..()
 	add_fingerprint(user)
 	if(special_state)
-		ui_interact(user, state = special_state)
+		. = ui_interact(user, state = special_state)
 	else
-		ui_interact(user)
+		. = ui_interact(user)
+	return .
+
+//Return a non FALSE value to interrupt attack_hand propagation to subtypes.
+/obj/machinery/ui_interact()
+	. = ..()
+	return FALSE
 
 /obj/machinery/ui_status(mob/user)
 	if(is_interactable())
@@ -242,10 +261,7 @@ Class Procs:
 	add_fingerprint(usr)
 	return 0
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 /obj/machinery/attack_paw(mob/living/user)
 	if(user.a_intent != INTENT_HARM)
@@ -256,32 +272,44 @@ Class Procs:
 		user.visible_message("<span class='danger'>[user.name] smashes against \the [src.name] with its paws.</span>", null, null, COMBAT_MESSAGE_RANGE)
 		take_damage(4, BRUTE, "melee", 1)
 
+/obj/machinery/attack_robot(mob/user)
+	if(!interact_allow_silicon && !IsAdminGhost(user))
+		return FALSE
+	var/mob/living/silicon/robot/R = user
+	var/list/view_range = getviewsize(R.client.view)
+	if(((length(view_range) != 2) || (get_turf(src) in block(locate(max(0, x - view_range[1]),max(0, y - view_range[1]),z), locate(min(world.maxx, x + view_range[1]),min(world.maxy, y + view_range[2]),z)))) && !R.low_power_mode)// This is to stop robots from using cameras to remotely control machines; and from using machines when the borg has no power.
+		return attack_hand(user)
 
 /obj/machinery/attack_ai(mob/user)
+	if(!interact_allow_silicon && !IsAdminGhost(user))
+		return FALSE
 	if(iscyborg(user))// For some reason attack_robot doesn't work
-		var/mob/living/silicon/robot/R = user
-		if(R.client && R.client.eye == R && !R.low_power_mode)// This is to stop robots from using cameras to remotely control machines; and from using machines when the borg has no power.
-			return attack_hand(user)
+		return attack_robot(user)
 	else
 		return attack_hand(user)
 
-
-//set_machine must be 0 if clicking the machinery doesn't bring up a dialog
+//set_machine must be FALSE if clicking the machinery doesn't bring up a dialog
 /obj/machinery/attack_hand(mob/user, check_power = 1, set_machine = 1)
-	if(..())// unbuckling etc
-		return 1
+	. = ..()
+	if(.)
+		return
 	if((user.lying || user.stat) && !IsAdminGhost(user))
-		return 1
-	if(!user.IsAdvancedToolUser() && !IsAdminGhost(user))
+		return
+	if(interact_wires_if_open && panel_open)
+		wires.interact(user)
+		return
+	if(interact_requires_dexterity && !user.IsAdvancedToolUser() && !IsAdminGhost(user))
 		to_chat(usr, "<span class='warning'>You don't have the dexterity to do this!</span>")
-		return 1
-	if(!is_interactable())
-		return 1
+		return
+	if(!is_interactable(user))
+		return
+	if(interact_requires_silicon && !issilicon(user))
+		return
+	if(interact_requires_anchored && !anchored)
+		return
 	if(set_machine)
 		user.set_machine(src)
-	interact(user)
-	add_fingerprint(user)
-	return 0
+	return interact(user)
 
 /obj/machinery/CheckParts(list/parts_list)
 	..()
@@ -410,8 +438,8 @@ Class Procs:
 				for(var/obj/item/stock_parts/B in W.contents)
 					if(istype(B, P) && istype(A, P))
 						if(B.rating > A.rating)
-							W.remove_from_storage(B, src)
-							W.handle_item_insertion(A, 1)
+							W.SendSignal(COMSIG_TRY_STORAGE_TAKE, B, src, TRUE, TRUE)
+							W.SendSignal(COMSIG_TRY_STORAGE_INSERT, A, null, TRUE, TRUE)
 							component_parts -= A
 							component_parts += B
 							B.moveToNullspace()

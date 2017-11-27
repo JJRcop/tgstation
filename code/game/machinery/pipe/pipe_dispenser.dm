@@ -5,15 +5,15 @@
 	desc = "Dispenses countless types of pipes. Very useful if you need pipes."
 	density = TRUE
 	anchored = TRUE
+	interact_offline = TRUE
 	var/wait = 0
 	var/piping_layer = PIPING_LAYER_DEFAULT
 
 /obj/machinery/pipedispenser/attack_paw(mob/user)
 	return attack_hand(user)
 
-/obj/machinery/pipedispenser/attack_hand(mob/user)
-	if(..())
-		return 1
+/obj/machinery/pipedispenser/ui_interact(mob/user)
+	. = ..()
 	var/dat = "PIPING LAYER: <A href='?src=[REF(src)];layer_down=1'>--</A><b>[piping_layer]</b><A href='?src=[REF(src)];layer_up=1'>++</A><BR>"
 
 	var/recipes = GLOB.atmos_pipe_recipes
@@ -119,9 +119,7 @@
 
 	qdel(pipe)
 
-/obj/machinery/pipedispenser/disposal/attack_hand(mob/user)
-	if(..())
-		return 1
+/obj/machinery/pipedispenser/disposal/interact(mob/user)
 
 	var/dat = ""
 	var/recipes = GLOB.disposal_pipe_recipes
@@ -171,9 +169,7 @@
 	desc = "Dispenses pipes that will move beings around."
 	anchored = TRUE
 
-/obj/machinery/pipedispenser/disposal/transit_tube/attack_hand(mob/user)
-	if(..())
-		return 1
+/obj/machinery/pipedispenser/disposal/transit_tube/interact(mob/user)
 
 	var/dat = {"<B>Transit Tubes:</B><BR>
 <A href='?src=[REF(src)];tube=[TRANSIT_TUBE_STRAIGHT]'>Straight Tube</A><BR>

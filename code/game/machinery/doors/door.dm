@@ -12,6 +12,7 @@
 	armor = list(melee = 30, bullet = 30, laser = 20, energy = 20, bomb = 10, bio = 100, rad = 100, fire = 80, acid = 70)
 	CanAtmosPass = ATMOS_PASS_DENSITY
 	flags_1 = PREVENT_CLICK_UNDER_1
+	interact_requires_dexterity = FALSE
 
 	var/secondsElectrified = 0
 	var/shockedby = list()
@@ -134,13 +135,11 @@
 			do_animate("deny")
 	return
 
-
-/obj/machinery/door/attack_ai(mob/user)
-	return src.attack_hand(user)
-
 /obj/machinery/door/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	return try_to_activate_door(user)
-
 
 /obj/machinery/door/attack_tk(mob/user)
 	if(requiresID() && !allowed(null))

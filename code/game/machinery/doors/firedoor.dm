@@ -23,6 +23,7 @@
 	closingLayer = CLOSED_FIREDOOR_LAYER
 	assemblytype = /obj/structure/firelock_frame
 	armor = list("melee" = 30, "bullet" = 30, "laser" = 20, "energy" = 20, "bomb" = 10, "bio" = 100, "rad" = 100, "fire" = 95, "acid" = 70)
+	interact_requires_silicon = TRUE
 	var/boltslocked = TRUE
 	var/list/affecting_areas
 
@@ -82,6 +83,9 @@
 		stat |= NOPOWER
 
 /obj/machinery/door/firedoor/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(operating || !density)
 		return
 	user.changeNext_move(CLICK_CD_MELEE)
@@ -141,14 +145,17 @@
 	else
 		close()
 
-/obj/machinery/door/firedoor/attack_ai(mob/user)
+/obj/machinery/door/firedoor/interact(mob/user)
+	if(!issilicon(user))
+		return TRUE
 	add_fingerprint(user)
 	if(welded || operating || stat & NOPOWER)
-		return
+		return TRUE
 	if(density)
 		open()
 	else
 		close()
+	return TRUE
 
 /obj/machinery/door/firedoor/attack_alien(mob/user)
 	add_fingerprint(user)

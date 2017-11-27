@@ -153,6 +153,9 @@
 			new /obj/item/clothing/head/bearpelt(src)
 
 /obj/structure/closet/crate/secure/loot/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(locked)
 		to_chat(user, "<span class='notice'>The crate is locked with a Deca-code lock.</span>")
 		var/input = input(usr, "Enter [codelen] digits. All digits must be unique.", "Deca-Code Lock", "") as text
@@ -184,7 +187,7 @@
 /obj/structure/closet/crate/secure/loot/AltClick(mob/living/user)
 	if(!user.canUseTopic(src))
 		return
-	attack_hand(user) //this helps you not blow up so easily by overriding unlocking which results in an immediate boom.
+	return attack_hand(user) //this helps you not blow up so easily by overriding unlocking which results in an immediate boom.
 
 /obj/structure/closet/crate/secure/loot/attackby(obj/item/W, mob/user)
 	if(locked)

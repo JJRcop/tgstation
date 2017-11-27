@@ -100,7 +100,8 @@ GLOBAL_LIST_EMPTY(announcement_systems)
 
 //config stuff
 
-/obj/machinery/announcement_system/interact(mob/user)
+/obj/machinery/announcement_system/ui_interact(mob/user)
+	. = ..()
 	if(stat & BROKEN)
 		visible_message("<span class='warning'>[src] buzzes.</span>", "<span class='italics'>You hear a faint buzz.</span>")
 		playsound(src.loc, 'sound/machines/buzz-two.ogg', 50, 1)

@@ -50,6 +50,7 @@
 	integrity_failure = 70
 	damage_deflection = AIRLOCK_DAMAGE_DEFLECTION_N
 	interact_open = TRUE
+	interact_requires_silicon = TRUE
 
 	var/security_level = 0 //How much are wires secured
 	var/aiControlDisabled = 0 //If 1, AI control is disabled until the AI hacks back in and disables the lock. If 2, the AI has bypassed the lock. If -1, the control is enabled but the AI had bypassed it earlier, so if it is disabled again the AI would have no trouble getting back in.
@@ -673,9 +674,12 @@
 		shock(user, 100)
 
 /obj/machinery/door/airlock/attack_paw(mob/user)
-	return src.attack_hand(user)
+	return attack_hand(user)
 
 /obj/machinery/door/airlock/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(!(issilicon(user) || IsAdminGhost(user)))
 		if(src.isElectrified())
 			if(src.shock(user, 100))
@@ -699,9 +703,6 @@
 			to_chat(user, "<span class='warning'>Wires are protected!</span>")
 			return
 		wires.interact(user)
-	else
-		..()
-	return
 
 /obj/machinery/door/airlock/proc/electrified_loop()
 	while (secondsElectrified > 0)
@@ -1373,6 +1374,7 @@
 	if(!ui)
 		ui = new(user, src, ui_key, "ai_airlock", name, 550, 456, master_ui, state)
 		ui.open()
+	return TRUE
 
 /obj/machinery/door/airlock/ui_data()
 	var/list/data = list()

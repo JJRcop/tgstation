@@ -51,9 +51,12 @@
 	open()
 
 /obj/structure/bodycontainer/attack_paw(mob/user)
-	return src.attack_hand(user)
+	return attack_hand(user)
 
 /obj/structure/bodycontainer/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(locked)
 		to_chat(user, "<span class='danger'>It's locked.</span>")
 		return
@@ -280,9 +283,12 @@ GLOBAL_LIST_EMPTY(crematoriums)
 	qdel(src)
 
 /obj/structure/tray/attack_paw(mob/user)
-	return src.attack_hand(user)
+	return attack_hand(user)
 
 /obj/structure/tray/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if (src.connected)
 		connected.close()
 		add_fingerprint(user)

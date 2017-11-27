@@ -183,13 +183,10 @@
 	else
 		return ..()
 
-/obj/machinery/teleport/station/attack_paw()
-	src.attack_hand()
-
-/obj/machinery/teleport/station/attack_ai()
-	src.attack_hand()
-
 /obj/machinery/teleport/station/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(!panel_open)
 		toggle(user)
 

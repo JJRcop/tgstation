@@ -155,18 +155,8 @@
 	QDEL_NULL(spark_system)
 	return ..()
 
-
-/obj/machinery/porta_turret/attack_ai(mob/user)
-	return attack_hand(user)
-
-/obj/machinery/porta_turret/attack_hand(mob/user)
+/obj/machinery/porta_turret/ui_interact(mob/user)
 	. = ..()
-	if(.)
-		return
-
-	interact(user)
-
-/obj/machinery/porta_turret/interact(mob/user)
 	var/dat
 	dat += "Status: <a href='?src=[REF(src)];power=1'>[on ? "On" : "Off"]</a><br>"
 	dat += "Behaviour controls are [locked ? "locked" : "unlocked"]<br>"
@@ -732,7 +722,7 @@
 					user << browse(null, "window=turretid")
 			else
 				if (user.machine==src)
-					src.attack_hand(user)
+					attack_hand(user)
 		else
 			to_chat(user, "<span class='warning'>Access denied.</span>")
 
@@ -751,7 +741,8 @@
 	else
 		to_chat(user, "<span class='notice'>There seems to be a firewall preventing you from accessing this device.</span>")
 
-/obj/machinery/turretid/attack_hand(mob/user as mob)
+/obj/machinery/turretid/ui_interact(mob/user)
+	. = ..()
 	if ( get_dist(src, user) > 0 )
 		if ( !(issilicon(user) || IsAdminGhost(user)) )
 			to_chat(user, "<span class='notice'>You are too far away.</span>")
@@ -759,7 +750,6 @@
 			user << browse(null, "window=turretid")
 			return
 
-	user.set_machine(src)
 	var/t = ""
 
 	if(locked && !(issilicon(user) || IsAdminGhost(user)))
@@ -786,7 +776,7 @@
 		toggle_on()
 	else if (href_list["toggleLethal"])
 		toggle_lethal()
-	src.attack_hand(usr)
+	attack_hand(usr)
 
 /obj/machinery/turretid/proc/toggle_lethal()
 	lethal = !lethal
@@ -913,7 +903,8 @@
 	if(properties["team_color"])
 		team_color = properties["team_color"]
 
-/obj/machinery/porta_turret/lasertag/interact(mob/user)
+/obj/machinery/porta_turret/lasertag/ui_interact(mob/user)
+	. = ..()
 	if(ishuman(user))
 		var/mob/living/carbon/human/H = user
 		if(team_color == "blue" && istype(H.wear_suit, /obj/item/clothing/suit/redtag))

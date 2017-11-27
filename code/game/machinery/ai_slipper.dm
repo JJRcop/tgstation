@@ -30,10 +30,10 @@
 		else
 			icon_state = "ai-slipper1"
 
-/obj/machinery/ai_slipper/attack_ai(mob/user)
-	return attack_hand(user)
-
 /obj/machinery/ai_slipper/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(stat & (NOPOWER|BROKEN))
 		return
 	if(!allowed(user))

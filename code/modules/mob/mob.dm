@@ -283,7 +283,7 @@
 			else
 				client.perspective = EYE_PERSPECTIVE
 				client.eye = loc
-		return 1 
+		return 1
 
 /mob/living/reset_perspective(atom/A)
 	if(..())
@@ -555,7 +555,7 @@
 	return
 
 /mob/MouseDrop(mob/M)
-	..()
+	. = ..()
 	if(M != usr)
 		return
 	if(usr == src)

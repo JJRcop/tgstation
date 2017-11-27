@@ -8,6 +8,7 @@
 	var/vmode = 1
 	circuit = /obj/item/circuitboard/computer/stockexchange
 	clockwork = TRUE //it'd look weird
+	interact_requires_dexterity = TRUE
 
 	light_color = LIGHT_COLOR_GREEN
 
@@ -20,17 +21,8 @@
 		return 0
 	return SSshuttle.points
 
-/obj/machinery/computer/stockexchange/attack_ai(mob/user)
-	return attack_hand(user)
-
-/obj/machinery/computer/stockexchange/attack_robot(mob/user)
-	return attack_hand(user)
-
-/obj/machinery/computer/stockexchange/attack_hand(var/mob/user)
-	if(..())
-		return
-	user.machine = src
-
+/obj/machinery/computer/stockexchange/ui_interact(mob/user)
+	. = ..()
 	var/css={"<style>
 .change {
 	font-weight: bold;
@@ -171,7 +163,6 @@ a.updated {
 	popup.set_content(dat)
 	popup.set_title_image(user.browse_rsc_icon(src.icon, src.icon_state))
 	popup.open()
-	return
 
 /obj/machinery/computer/stockexchange/proc/sell_some_shares(var/datum/stock/S, var/mob/user)
 	if (!user || !S)

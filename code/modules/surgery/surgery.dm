@@ -64,7 +64,6 @@
 	SSblackbox.record_feedback("tally", "surgeries_completed", 1, type)
 	qdel(src)
 
-
 /datum/surgery/proc/get_propability_multiplier()
 	var/propability = 0.5
 	var/turf/T = get_turf(target)
@@ -77,9 +76,6 @@
 		propability = 0.7
 
 	return propability + success_multiplier
-
-
-
 
 //INFO
 //Check /mob/living/carbon/attackby for how surgery progresses, and also /mob/living/carbon/attack_hand.

@@ -223,12 +223,7 @@ GLOBAL_LIST_EMPTY(gravity_generators) // We will keep track of this by adding ne
 				return
 	return ..()
 
-
-/obj/machinery/gravity_generator/main/attack_hand(mob/user)
-	if(!..())
-		return interact(user)
-
-/obj/machinery/gravity_generator/main/interact(mob/user)
+/obj/machinery/gravity_generator/main/ui_interact(mob/user)
 	if(stat & BROKEN)
 		return
 	var/dat = "Gravity Generator Breaker: "

@@ -376,7 +376,7 @@
 /obj/machinery/power/apc/attackby(obj/item/W, mob/living/user, params)
 
 	if(issilicon(user) && get_dist(src,user)>1)
-		return src.attack_hand(user)
+		return attack_hand(user)
 	if (istype(W, /obj/item/crowbar)) //Using crowbar
 		if (opened) // a) on open apc
 			if (has_electronics==1)
@@ -723,6 +723,9 @@
 // attack with hand - remove cell (if cover open) or interact with the APC
 
 /obj/machinery/power/apc/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(!user)
 		return
 	if(usr == user && opened && (!issilicon(user)))
@@ -736,7 +739,6 @@
 		return
 	if((stat & MAINT) && !opened) //no board; no interface
 		return
-	..()
 
 /obj/machinery/power/apc/ui_interact(mob/user, ui_key = "main", datum/tgui/ui = null, force_open = FALSE, \
 										datum/tgui/master_ui = null, datum/ui_state/state = GLOB.default_state)

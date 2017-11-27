@@ -138,7 +138,8 @@ Possible to do for anyone motivated enough:
 		hangup_all_calls()
 		return
 
-/obj/machinery/holopad/interact(mob/living/carbon/human/user) //Carn: Hologram requests.
+/obj/machinery/holopad/ui_interact(mob/living/carbon/human/user) //Carn: Hologram requests.
+	. = ..()
 	if(!istype(user))
 		return
 

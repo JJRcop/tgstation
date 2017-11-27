@@ -518,6 +518,7 @@
 	outfit = /datum/outfit/spacebartender
 	assignedrole = "Space Bar Patron"
 
+//ATTACK HAND IGNORING PARENT RETURN VALUE
 /obj/effect/mob_spawn/human/alive/space_bar_patron/attack_hand(mob/user)
 	var/despawn = alert("Return to cryosleep? (Warning, Your mob will be deleted!)",,"Yes","No")
 	if(despawn == "No" || !loc || !Adjacent(user))

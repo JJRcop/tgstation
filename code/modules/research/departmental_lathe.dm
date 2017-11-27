@@ -62,13 +62,8 @@
 		return FALSE
 	. = ..()
 
-/obj/machinery/rnd/protolathe/department/attack_hand(mob/user)
-	if(..())
-		return
-	interact(user)
-
-/obj/machinery/rnd/protolathe/department/interact(mob/user)
-	user.set_machine(src)
+/obj/machinery/rnd/protolathe/department/ui_interact(mob/user)
+	. = ..()
 	var/datum/browser/popup = new(user, "rndconsole", name, 460, 550)
 	popup.set_content(generate_ui())
 	popup.open()

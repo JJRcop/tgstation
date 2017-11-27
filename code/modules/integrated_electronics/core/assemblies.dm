@@ -52,8 +52,11 @@
 			if(!draw_power(IC.power_draw_idle))
 				IC.power_fail()
 
-
 /obj/item/device/electronic_assembly/interact(mob/user)
+	ui_interact(user)
+
+/obj/item/device/electronic_assembly/ui_interact(mob/user)
+	. = ..()
 	if(!check_interactivity(user))
 		return
 
@@ -464,10 +467,11 @@
 	..()
 
 /obj/item/device/electronic_assembly/large/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(anchored)
 		attack_self(user)
-		return
-	..()
 
 /obj/item/device/electronic_assembly/large/default
 	name = "type-a electronic machine"

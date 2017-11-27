@@ -99,7 +99,11 @@
 /obj/item/stack/attack_self(mob/user)
 	interact(user)
 
-/obj/item/stack/interact(mob/user, recipes_sublist)
+/obj/item/stack/interact(mob/user, sublist)
+	ui_interact(user, sublist)
+
+/obj/item/stack/ui_interact(mob/user, recipes_sublist)
+	. = ..()
 	if (!recipes)
 		return
 	if (!src || get_amount() <= 0)
@@ -288,13 +292,14 @@
 		merge(AM)
 	. = ..()
 
+//ATTACK HAND IGNORING PARENT RETURN VALUE
 /obj/item/stack/attack_hand(mob/user)
-	if (user.get_inactive_held_item() == src)
+	if(user.get_inactive_held_item() == src)
 		if(zero_amount())
 			return
 		return change_stack(user,1)
 	else
-		..()
+		. = ..()
 
 /obj/item/stack/AltClick(mob/living/user)
 	if(!istype(user) || !user.canUseTopic(src))
@@ -317,16 +322,15 @@
 			change_stack(user,stackmaterial)
 			to_chat(user, "<span class='notice'>You take [stackmaterial] sheets out of the stack</span>")
 
-/obj/item/stack/proc/change_stack(mob/user,amount)
-	var/obj/item/stack/F = new type(user, amount, FALSE)
+/obj/item/stack/proc/change_stack(mob/user, amount)
+	var/obj/item/stack/F = new type(user? user : src, amount, FALSE)
 	. = F
 	F.copy_evidences(src)
-	user.put_in_hands(F, merge_stacks=FALSE)
-	add_fingerprint(user)
-	F.add_fingerprint(user)
+	if(user)
+		user.put_in_hands(F, merge_stacks = FALSE)
+		add_fingerprint(user)
+		F.add_fingerprint(user)
 	use(amount, TRUE)
-
-
 
 /obj/item/stack/attackby(obj/item/W, mob/user, params)
 	if(istype(W, merge_type))

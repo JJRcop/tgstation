@@ -384,7 +384,9 @@ Difficulty: Very Hard
 		ActivationReaction(speaker, ACTIVATE_SPEECH)
 
 /obj/machinery/anomalous_crystal/attack_hand(mob/user)
-	..()
+	. = ..()
+	if(.)
+		return
 	ActivationReaction(user, ACTIVATE_TOUCH)
 
 /obj/machinery/anomalous_crystal/attackby(obj/item/I, mob/user, params)

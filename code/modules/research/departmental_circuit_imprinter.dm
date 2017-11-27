@@ -36,14 +36,8 @@
 		return FALSE
 	. = ..()
 
-/obj/machinery/rnd/circuit_imprinter/department/attack_hand(mob/user)
-	if(..())
-		return
-	interact(user)
-
-/obj/machinery/rnd/circuit_imprinter/department/interact(mob/user)
-	user.set_machine(src)
-
+/obj/machinery/rnd/circuit_imprinter/department/ui_interact(mob/user)
+	. = ..()
 	var/datum/browser/popup = new(user, "rndconsole", name, 460, 550)
 	popup.set_content(generate_ui())
 	popup.open()

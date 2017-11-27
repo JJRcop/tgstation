@@ -133,11 +133,9 @@ GLOBAL_VAR_INIT(time_last_changed_position, 0)
 			return -1
 	return 0
 
-/obj/machinery/computer/card/attack_hand(mob/user)
-	if(..())
-		return
+/obj/machinery/computer/card/ui_interact(mob/user)
+	. = ..()
 
-	user.set_machine(src)
 	var/dat
 	if(!SSticker)
 		return
@@ -346,8 +344,6 @@ GLOBAL_VAR_INIT(time_last_changed_position, 0)
 	popup.set_content(dat)
 	popup.set_title_image(user.browse_rsc_icon(src.icon, src.icon_state))
 	popup.open()
-	return
-
 
 /obj/machinery/computer/card/Topic(href, href_list)
 	if(..())

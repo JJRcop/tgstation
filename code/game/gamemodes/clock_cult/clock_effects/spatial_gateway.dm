@@ -62,6 +62,7 @@
 		user.forceMove(get_turf(linked_gateway))
 	..()
 
+//ATTACK HAND IGNORING PARENT RETURN VALUE
 /obj/effect/clockwork/spatial_gateway/attack_hand(mob/living/user)
 	if(!uses)
 		return FALSE

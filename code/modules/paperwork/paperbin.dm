@@ -45,6 +45,7 @@
 	..()
 
 /obj/item/paper_bin/MouseDrop(atom/over_object)
+	. = ..()
 	var/mob/living/M = usr
 	if(!istype(M) || M.incapacitated() || !Adjacent(M))
 		return
@@ -58,12 +59,13 @@
 
 	add_fingerprint(M)
 
-
 /obj/item/paper_bin/attack_paw(mob/user)
 	return attack_hand(user)
 
-
 /obj/item/paper_bin/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 	if(user.lying)
 		return
 	user.changeNext_move(CLICK_CD_MELEE)
@@ -147,12 +149,15 @@
 	icon_state = "paper_bundle"
 	papertype = /obj/item/paper/natural
 	resistance_flags = FLAMMABLE
+
 /obj/item/paper_bin/bundlenatural/attack_hand(mob/user)
 	..()
 	if(total_paper < 1)
 		qdel(src)
+
 /obj/item/paper_bin/bundlenatural/fire_act(exposed_temperature, exposed_volume)
 	qdel(src)
+
 /obj/item/paper_bin/bundlenatural/attackby(obj/item/W, mob/user)
 	if(W.is_sharp())
 		to_chat(user, "<span class='notice'>You snip \the [src], spilling paper everywhere.</span>")

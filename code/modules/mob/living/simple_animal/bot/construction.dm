@@ -228,8 +228,6 @@
 		to_chat(user, "<span class='warning'>They won't fit in, as there is already stuff inside!</span>")
 		return
 	if(T.use(10))
-		if(user.s_active)
-			user.s_active.close(user)
 		var/obj/item/bot_assembly/floorbot/B = new
 		user.put_in_hands(B)
 		to_chat(user, "<span class='notice'>You add the tiles into the empty [src.name]. They protrude from the top.</span>")
@@ -248,7 +246,7 @@
 				build_step++
 				update_icon()
 
-		if(ASSEMBLY_SECOND_STEP)	
+		if(ASSEMBLY_SECOND_STEP)
 			if(istype(W, /obj/item/bodypart/l_arm/robot) || istype(W, /obj/item/bodypart/r_arm/robot))
 				var/mob/living/simple_animal/bot/floorbot/A = new(drop_location())
 				A.name = created_name
@@ -299,7 +297,6 @@
 	A.firstaid = type
 	qdel(S)
 	qdel(src)
-
 
 /obj/item/bot_assembly/medbot/attackby(obj/item/W, mob/user, params)
 	..()

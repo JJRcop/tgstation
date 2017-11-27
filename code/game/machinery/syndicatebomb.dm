@@ -12,6 +12,9 @@
 	layer = BELOW_MOB_LAYER //so people can't hide it and it's REALLY OBVIOUS
 	resistance_flags = FIRE_PROOF | ACID_PROOF
 
+	interact_allow_silicon = FALSE
+	interact_offline = TRUE
+
 	var/minimum_timer = 90
 	var/timer_set = 90
 	var/maximum_timer = 60000
@@ -179,12 +182,6 @@
 		. = ..()
 		if((old_integ > obj_integrity) && active && !defused && (payload in src))
 			to_chat(user, "<span class='warning'>That seems like a really bad idea...</span>")
-
-/obj/machinery/syndicatebomb/attack_hand(mob/user)
-	interact(user)
-
-/obj/machinery/syndicatebomb/attack_ai()
-	return
 
 /obj/machinery/syndicatebomb/interact(mob/user)
 	wires.interact(user)

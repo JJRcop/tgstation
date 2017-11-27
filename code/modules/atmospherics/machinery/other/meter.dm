@@ -99,7 +99,6 @@
 	..()
 	to_chat(user, status())
 
-
 /obj/machinery/meter/attackby(obj/item/W, mob/user, params)
 	if (istype(W, /obj/item/wrench))
 		playsound(src, W.usesound, 50, 1)
@@ -114,19 +113,16 @@
 	else
 		return ..()
 
-/obj/machinery/meter/attack_ai(mob/user)
-	return attack_hand(user)
-
-/obj/machinery/meter/attack_paw(mob/user)
-	return attack_hand(user)
-
 /obj/machinery/meter/attack_hand(mob/user)
+	. = ..()
+	if(.)
+		return
 
 	if(stat & (NOPOWER|BROKEN))
-		return 1
+		return
 	else
 		to_chat(usr, status())
-		return 1
+		return
 
 /obj/machinery/meter/singularity_pull(S, current_size)
 	..()
