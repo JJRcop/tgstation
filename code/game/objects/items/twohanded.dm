@@ -513,6 +513,7 @@
 
 /obj/item/twohanded/spear/explosive
 	name = "explosive lance"
+	throw_range = 1
 	var/obj/item/grenade/explosive = null
 
 /obj/item/twohanded/spear/explosive/Initialize(mapload, obj/item/grenade/G)
