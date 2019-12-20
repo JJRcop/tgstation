@@ -962,7 +962,7 @@ GLOBAL_DATUM_INIT(sdql2_vv_statobj, /obj/effect/statclick/SDQL2_VV_all, new(null
 				querys[querys_pos] = parsed_tree
 				querys_pos++
 			else //There was an error so don't run anything, and tell the user which query has errored.
-				to_chat(usr, "<span class='danger'>Parsing error on [querys_pos]\th query. Nothing was executed.</span>")
+				to_chat(usr, "<span class='danger'>SDQL2: Parsing error on [querys_pos]\th query. Nothing was executed.</span>")
 				return list()
 			query_tree = list()
 			do_parse = 0
@@ -1008,30 +1008,36 @@ GLOBAL_DATUM_INIT(sdql2_vv_statobj, /obj/effect/statclick/SDQL2_VV_all, new(null
 		D = object
 
 	if (object == world && (!long || expression[start + 1] == ".") && !(expression[start] in exclude) && copytext(expression[start], 1, 3) != "SS")
-		to_chat(usr, "<span class='danger'>World variables are not allowed to be accessed. Use global.</span>")
+		to_chat(usr, "<span class='danger'>SDQL2: World variables are not allowed to be accessed. Use global.</span>")
 		return null
 
-	else if(expression [start] == "{" && long)
+	else if(expression[start] == "{" && long)
+
 		if(lowertext(copytext(expression[start + 1], 1, 3)) != "0x")
-			to_chat(usr, "<span class='danger'>Invalid pointer syntax: [expression[start + 1]]</span>")
+			to_chat(usr, "<span class='danger'>SDQL2: Invalid pointer syntax: [expression[start + 1]]</span>")
 			return null
 		v = locate("\[[expression[start + 1]]]")
+
 		if(!v)
-			to_chat(usr, "<span class='danger'>Invalid pointer: [expression[start + 1]]</span>")
+			to_chat(usr, "<span class='danger'>SDQL2: Invalid pointer: [expression[start + 1]]</span>")
 			return null
 		start++
 		long = start < expression.len
+
 	else if(expression[start] == "(" && long)
 		v = query.SDQL_expression(source, expression[start + 1])
 		start++
 		long = start < expression.len
+
 	else if(D != null && (!long || expression[start + 1] == ".") && (expression[start] in D.vars))
 		if(D.can_vv_get(expression[start]) || superuser)
 			v = D.vars[expression[start]]
 		else
 			v = "SECRET"
+
 	else if(D != null && long && expression[start + 1] == ":" && hascall(D, expression[start]))
 		v = expression[start]
+
 	else if(!long || expression[start + 1] == ".")
 		switch(expression[start])
 			if("usr")
@@ -1071,18 +1077,35 @@ GLOBAL_DATUM_INIT(sdql2_vv_statobj, /obj/effect/statclick/SDQL2_VV_all, new(null
 					return null
 	else if(object == GLOB) // Shitty ass hack kill me.
 		v = expression[start]
-	if(long)
+
+	if(long && expression[start + 1] == ":")
+		v = (query.options & SDQL2_OPTION_BLOCKING_CALLS)? query.SDQL_function_async(object, v, expression[start + 2], source) : query.SDQL_function_blocking(object, v, expression[start + 2], source)
+		start += 2
+		long = start < expression.len
+
+	while(long)
 		if(expression[start + 1] == ".")
-			return SDQL_var(v, expression[start + 2], null, source, superuser, query)
-		else if(expression[start + 1] == ":")
-			return (query.options & SDQL2_OPTION_BLOCKING_CALLS)? query.SDQL_function_async(object, v, expression[start + 2], source) : query.SDQL_function_blocking(object, v, expression[start + 2], source)
-		else if(expression[start + 1] == "\[" && islist(v))
+			v = SDQL_var(v, expression[start + 2], 1, source, superuser, query)
+			start += 2
+			long = start < expression.len
+
+		else if(expression[start + 1] == "\[")
+			if(!islist(v))
+				to_chat(usr, "<span class='danger'>SDQL2: Attempt to index non-list: [expression[start]], [v]</span>")
+				return null
 			var/list/L = v
 			var/index = query.SDQL_expression(source, expression[start + 2])
 			if(isnum(index) && (!ISINTEGER(index) || L.len < index))
-				to_chat(usr, "<span class='danger'>Invalid list index: [index]</span>")
+				to_chat(usr, "<span class='danger'>SDQL2: Invalid list index: [index]</span>")
 				return null
-			return L[index]
+			v = L[index]
+			start += 2
+			long = start < expression.len
+
+		else
+			to_chat(usr, "<span class='danger'>SDQL2: Infinite loop on variable resolution</span>")
+			return null
+
 	return v
 
 /proc/SDQL2_tokenize(query_text)

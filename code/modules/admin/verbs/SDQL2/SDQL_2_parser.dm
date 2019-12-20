@@ -362,28 +362,32 @@
 
 		L[++L.len] = sub_expression
 
-	if(token(i + 1) == ".")
-		L += "."
-		i = variable(i + 2, L)
-
-	else if (token(i + 1) == "(") // OH BOY PROC
+	if (token(i + 1) == "(") // OH BOY PROC
 		var/list/arguments = list()
 		i = call_function(i, null, arguments)
 		L += ":"
 		L[++L.len] = arguments
-
-	else if (token(i + 1) == "\[")
-		var/list/expression = list()
-		i = expression(i + 2, expression)
-		if (token(i) != "]")
-			parse_error("Missing ] at the end of list access.")
-
-		L += "\["
-		L[++L.len] = expression
-		i++
-
 	else
 		i++
+
+	while(TRUE)
+
+		if(token(i) == ".")
+			L += "."
+			i = variable(i + 1, L)
+
+		else if (token(i) == "\[")
+			var/list/expression = list()
+			i = expression(i + 1, expression)
+			if (token(i) != "]")
+				parse_error("Missing ] at the end of list access.")
+
+			L += "\["
+			L[++L.len] = expression
+			i++
+
+		else
+			break
 
 	return i
 
