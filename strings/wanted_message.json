@@ -3,7 +3,7 @@
 		"Fugitive from the law due to",
 		"Needs to be interrogated for information about",
 		"Wanted by The Syndicate for",
-		"Ransomable to Nanotrasen for"
+		"Ransomable to Nanotrasen for",
 		"Has exploitable information about"
 	],
 	"verb": [
@@ -37,10 +37,14 @@
 		"a cult": 50,
 		"shapeshifting creatures": 50,
 		"a toolbox": 10,
+		"a bar of soap": 10,
 		"lizardmen": 10,
 		"two million credits": 10,
 		"a gondola": 10,
 		"one billion credits": 5,
+		"research on floor clowns": 5,
+		"Officer Beepsky": 5,
+		"clown tears": 5,
 		"John F Kennedy 2": 5,
 		"Nanotrasen's swimsuit calendar": 5,
 		"a suspicious bus": 5,
@@ -50,7 +54,8 @@
 		"YALPER": 1,
 		"absolutely nothing": 1,
 		"Cuban Pete": 1,
-		"your mother": 1
+		"your mother": 1,
+		"WGW": 1
 	},
 	"location": {
 		"on Space Station 13": 50,
