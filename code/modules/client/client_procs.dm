@@ -288,6 +288,7 @@ GLOBAL_LIST_EMPTY(external_rsc_urls)
 		player_details.byond_version = full_version
 		GLOB.player_details[ckey] = player_details
 
+	winset(src, "gameinterface", "is-transparent=true")
 
 	. = ..()	//calls mob.Login()
 	if (length(GLOB.stickybanadminexemptions))

@@ -146,6 +146,14 @@ window "mapwindow"
 		is-default = true
 		saved-params = "icon-size"
 		zoom-mode = distort
+	elem "gameinterface"
+		type = BROWSER
+		pos = 0,0
+		size = 640x480
+		anchor1 = none
+		anchor2 = none
+		background-color = none
+		saved-params = ""
 
 window "infowindow"
 	elem "infowindow"
