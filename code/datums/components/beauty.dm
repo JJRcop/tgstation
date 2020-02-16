@@ -2,7 +2,7 @@
 	var/beauty = 0
 
 /datum/component/beauty/Initialize(beautyamount)
-	if(!ismovableatom(parent))
+	if(!ismovable(parent))
 		return COMPONENT_INCOMPATIBLE
 	beauty = beautyamount
 	RegisterSignal(parent, COMSIG_ENTER_AREA, .proc/enter_area)
