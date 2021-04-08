@@ -688,6 +688,9 @@
 
 ///from base of obj/item/equipped(): (/mob/equipper, slot)
 #define COMSIG_ITEM_EQUIPPED "item_equip"
+///called on [/obj/item] before unequip from base of [mob/proc/doUnEquip]: (atom/newloc, no_move, force)
+#define COMSIG_ITEM_PRE_UNEQUIP "item_pre_unequip"
+	#define COMPONENT_ITEM_BLOCK_UNEQUIP (1<<0)
 ///from base of obj/item/on_grind(): ())
 #define COMSIG_ITEM_ON_GRIND "on_grind"
 ///from base of obj/item/on_juice(): ()
